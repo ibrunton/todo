@@ -1,35 +1,22 @@
 # todo makefile
-# 2021-07-25 07:20
+# 2021-09-12 11:08
 # by Ian D Brunton <iandbrunton at gmail dot com>
 
-APPNAME=todo
-VERSION=0.1a
-CC=gcc
+APPNAME = todo
+VERSION = 0.1a
+CC = gcc
 
-INCLUDE_DIRS =
-LIB_DIRS =
-CDEFS =
-CFLAGS=-c -g -Wall -DVERSION=\"$(VERSION)\" -DAPPNAME=\"$(APPNAME)\"
-LIBS =
-LDFLAGS=
-PREFIX=
+CFLAGS = -DVERSION=\"$(VERSION)\" -DAPPNAME=\"$(APPNAME)\" -I.
 
-HFILES =
-CFILES = main.c
+SRCS = main.c
+OBJS = $(SRCS:.c=.o)
+DEPS = 
 
-SRCS ${HFILES} ${CFILES}
-OBJS = =$(CFILES:.c=.o)
-
-all: $(APPNAME)
+%.o: %.c $(DEPS)
+	$(CC) -c -o $@ $< $(CFLAGS)
 
 $(APPNAME): $(OBJS)
-	$(CC) $(LDFLAGS) -Wl,--start-group $(OBJS) -Wl,--end-group -o $@
-
-.c.o:
-	$(CC) $(CFLAGS)  $< -o $@
-
-install: all
-	install -D -m 755 -o root -g root $(APPNAME) $(DESTDIR)$(PREFIX)/$(APPNAME)
+	$(CC) -o $@ $^ $(CFLAGS)
 
 clean:
 	rm -rf *.o $(APPNAME)
